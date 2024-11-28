@@ -1,0 +1,127 @@
+/* styles.css */
+* {
+	padding:0;
+	margin:0;
+}
+html {
+	background-color:#f9f9f9;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f9f9f9;
+}
+
+header {
+    background-color: #B70344;
+    color: #ffe500;
+    padding: 1rem;
+    text-align: center;
+    margin-top:20px;
+}
+
+main {
+    margin: 20px;
+    margin-bottom:70px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input {
+    padding: 10px;
+    font-size: 16px;
+}
+
+.button1 {
+    background-color: #B70344;
+    color: #ffe500;
+    padding: 5px 10px;
+    border: none;
+    cursor: pointer;
+    width:100px;
+}
+
+label {
+	color:#B73044;
+}
+
+.button2 {
+    background-color: #B70344;
+    color: #ffe500;
+    padding: 10px 10px;
+    border: none;
+    cursor: pointer;
+}
+
+.btn:hover, button:hover {
+    opacity:80%;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    text-align: left;
+    padding: 8px;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+.btn {
+	background-color:#ffffff;
+	border:solid;
+	border-width:1px;
+	border-radius:5px;
+	width:150px;
+	height:30px;
+	margin:0;
+	text-align:center;
+	align-content:center;
+	align-items:center;
+	text-decoration:none;
+}
+
+.btnex{
+	background-color:#b70344;
+	color:#ffffff;
+}
+
+.btnexcel {
+	border-color:#088700;
+	color:#088700;
+}
+
+.btnpdf {
+	border-color:#D61400;
+	color:#D61400;
+}
+
+.btnacc {
+	border-color:#910E00;
+	color:#910E00;
+}
+
+.btnword {
+	border-color:#034BF2;
+	color:#034BF2;
+}
+
+a {
+	text-decoration:none;
+}
+

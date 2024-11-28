@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Student</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles2.css">
+    <link rel="stylesheet" href="footer.css" >
+</head>
+<body>
+    <header>
+        <h2>Media Unit of</h2>
+        <h1>K/Polegoda M.V.</h1>
+        <br>
+        <hr style="background-color:yellow;">
+        <br>
+        <h3>New Registration</h3>
+    </header>
+    <main>
+        <form id="student-form">
+            <label for="student-name">Name:</label>
+            <p>When entering your name, enter with initials.<br>
+            Example: T. D. K. Harshana Premalal</p>
+            <input type="text" id="student-name" required>
+
+            <label for="student-age">Age:</label>
+            <input type="number" id="student-age" required>
+            
+            <label for="student-address">Address:</label>
+            <input type="text" id="student-address" required>
+
+            <label for="student-class">Class or Position:</label>
+            <input type="text" id="student-class" required>
+            
+            <label for="student-contact">Contact Number:</label>
+            <p>Please enter with Country code<br>Example: +94 75 598 2430</p>
+            <input type="text" id="student-contact" required>
+            
+            <label for="student-whatsapp">WhatsApp Number:</label>
+            <p>Please enter with Country code<br>Example: +94 75 598 2430</p>
+            <input type="text" id="student-whatsapp">
+
+            <button class="button2" type="submit">Add Member</button>
+        </form>
+        <br><br>
+        <a href="table.html">
+            <div class="btnex btn">View Members</div>
+        </a>
+    </main>
+    <script>
+        document.getElementById('student-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Collect data from the form
+            const name = document.getElementById('student-name').value;
+            const age = document.getElementById('student-age').value;
+            const studentAddress = document.getElementById('student-address').value;
+            const studentClass = document.getElementById('student-class').value;
+            const studentContact = document.getElementById('student-contact').value;
+            const studentWhatsapp = document.getElementById('student-whatsapp').value;
+
+            // Get existing students from localStorage
+            let students = JSON.parse(localStorage.getItem('students')) || [];
+
+            // Add new student to the list
+            students.push({ 
+                name, 
+                age, 
+                studentAddress, 
+                studentClass, 
+                studentContact, 
+                studentWhatsapp 
+            });
+
+            // Save back to localStorage
+            localStorage.setItem('students', JSON.stringify(students));
+
+            // Clear the form
+            this.reset();
+
+            alert('Infomation added successfully!');
+        });
+    </script>
+    
+<footer>
+    <div>
+    	<p>&copy; 2024 K/Polegoda M. V. - National School<br>All rights reserved.</p><br>
+        <u><a href="privacy.html">Privacy Policy</a></u>
+        <br><br><br>
+        <p>Contact us:</p>
+        <div class="footer-icons">
+            <a href="https://www.facebook.com/yourpage" target="_blank">Facebook</a> |
+            <a href="tel:+94720437397">Call Us</a> | 
+            <a href="mailto:pmvmediaunit@gmail.com.com">E - Mail</a> | 
+            <a href="https://wa.me/94720437397" target="_blank">WhatsApp</a>
+        </div>
+    </div>
+</footer>
+
+    
+</body>
+</html>

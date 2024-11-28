@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student List</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles2.css">
+    <link rel="stylesheet" href="footer.css">
+</head>
+<body>
+    <header>
+        <h1>Members Infomation</h1>
+    </header>
+    <main>
+        <table id="students-table">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Address</th>
+                    <th>Class</th>
+                    <th>Contact Number</th>
+                    <th>WhatsApp Number</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- Rows will be populated here by JavaScript -->
+            </tbody>
+        </table>
+        <br><br>
+        <a href="index.html">
+            <div class="btnex btn">Add Member</div>
+        </a><br><br>
+        <ul class="export">
+            <li><div class="btnexcel btn" onclick="exportToExcel()">Export to Excel</div></li>
+            <li><div class="btnpdf btn" onclick="exportToPDF()">Export to PDF</div></li>
+            <li><div class="btnacc btn" onclick="exportToAccess()">Export to Access</div></li>
+            <li><div class="btnword btn" onclick="exportToWord()">Export to Word</div></li>
+        </ul>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html-docx-js/0.1.1/html-docx.min.js"></script>
+
+    <script>
+        function loadStudents() {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const tableBody = document.querySelector('#students-table tbody');
+            tableBody.innerHTML = '';
+
+            students.forEach((student, index) => {
+                const studentID = `mmu00${index + 1}`;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${studentID}</td>
+                    <td>${student.name}</td>
+                    <td>${student.age}</td>
+                    <td>${student.studentAddress}</td>
+                    <td>${student.studentClass}</td>
+                    <td>${student.studentContact}</td>
+                    <td>${student.studentWhatsapp}</td>
+                    <td><button class="button1" onclick="deleteStudent(${index})">Delete</button></td>
+                `;
+                tableBody.appendChild(row);
+            });
+        }
+
+        function deleteStudent(index) {
+            let students = JSON.parse(localStorage.getItem('students')) || [];
+            students.splice(index, 1);
+            localStorage.setItem('students', JSON.stringify(students));
+            loadStudents();
+        }
+
+        function exportToExcel() {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const worksheetData = students.map((student, index) => ({
+                ID: `mmu00${index + 1}`,
+                Name: student.name,
+                Age: student.age,
+                Address: student.studentAddress,
+                Class: student.studentClass,
+                "Contact Number": student.studentContact,
+                "WhatsApp Number": student.studentWhatsapp
+            }));
+            const worksheet = XLSX.utils.json_to_sheet(worksheetData);
+            const workbook = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(workbook, worksheet, "Students");
+            XLSX.writeFile(workbook, "Members Info - PMVMU.xlsx");
+        }
+
+async function exportToPDF() {
+    const students = JSON.parse(localStorage.getItem('students')) || [];
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    let studentsPerPage = 3; // Number of students per page
+    let pageNumber = 1; // Start page numbering
+    let rowPosition = 30; // Start position for the first page
+
+    // Function to add watermark and page number
+    const addFooterAndWatermark = (doc, pageNumber) => {
+
+        // Add page number
+        doc.setFontSize(10);
+        doc.setTextColor(0, 0, 0); // Black color
+        doc.text('Media Unit Of K/Polegoda M. V.' , 10, 290);
+        doc.text(`Page ${pageNumber}`, 200, 290, null, null, "right"); // Bottom-right corner
+    };
+
+    // Add title to the first page with larger, bold font (only on first page)
+    doc.setFontSize(20); // Bigger title
+    doc.setFont("helvetica", "bold");
+    doc.setTextColor(0, 0, 0); // Black color
+    doc.text("Member Information of Media Unit\nK/ Polegoda Maha Vidyalaya\n", 105, 10, null, null, "center");
+    
+    students.forEach((student, index) => {
+        const studentID = `mmu00${index + 1}`;
+
+        // Add student information
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(12);
+        doc.text(`ID: ${studentID}`, 10, rowPosition);
+        rowPosition += 10;
+        doc.setFont("helvetica", "normal");
+        doc.text(`Name: ${student.name}`, 10, rowPosition);
+        rowPosition += 10;
+        doc.text(`Age: ${student.age}`, 10, rowPosition);
+        rowPosition += 10;
+        doc.text(`Address: ${student.studentAddress}`, 10, rowPosition);
+        rowPosition += 10;
+        doc.text(`Class: ${student.studentClass}`, 10, rowPosition);
+        rowPosition += 10;
+        doc.text(`Contact Number: ${student.studentContact}`, 10, rowPosition);
+        rowPosition += 10;
+        doc.text(`WhatsApp Number: ${student.studentWhatsapp}`, 10, rowPosition);
+        rowPosition += 10;
+
+        // Add a separator line
+        doc.setDrawColor(0, 0, 0); // Black color
+        doc.line(10, rowPosition, 200, rowPosition); // Horizontal line
+        rowPosition += 10;
+
+        // If 3 students are added on the current page, start a new page
+        if ((index + 1) % studentsPerPage === 0 && index !== students.length - 1) {
+            // Add footer and watermark before starting a new page
+            addFooterAndWatermark(doc, pageNumber);
+
+            // Start a new page
+            doc.addPage();
+            pageNumber++; // Increment page number
+            rowPosition = 20; // Reset row position for the new page
+
+        }
+    });
+
+    // Add footer and watermark to the last page
+    addFooterAndWatermark(doc, pageNumber);
+
+    // Save the PDF
+    doc.save("Members Info - PMVMU.pdf");
+
+    // Scroll to the bottom of the page after export (only in case of any additional tasks)
+    window.scrollTo(0, document.body.scrollHeight);
+}
+
+
+        function exportToAccess() {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const csvData = students.map((student, index) => (
+                `"mmu00${index + 1}","${student.name}","${student.age}","${student.studentAddress}","${student.studentClass}","${student.studentContact}","${student.studentWhatsapp}"`
+            )).join("\n");
+
+            const csvContent = `ID,Name,Age,Address,Class,Contact Number,WhatsApp Number\n${csvData}`;
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'Members Info - PMVMU.accdb.csv';
+            a.click();
+        }
+
+        async function exportToWord() {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            const htmlContent = `
+                <h2>Student List</h2>
+                <table border="1">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Age</th>
+                            <th>Address</th>
+                            <th>Class</th>
+                            <th>Contact Number</th>
+                            <th>WhatsApp Number</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${students.map((student, index) => {
+                            const studentID = `mmu00${index + 1}`;
+                            return `
+                                <tr>
+                                    <td>${studentID}</td>
+                                    <td>${student.name}</td>
+                                    <td>${student.age}</td>
+                                    <td>${student.studentAddress}</td>
+                                    <td>${student.studentClass}</td>
+                                    <td>${student.studentContact}</td>
+                                    <td>${student.studentWhatsapp}</td>
+                                </tr>
+                            `;
+                        }).join('')}
+                    </tbody>
+                </table>
+            `;
+            const converted = htmlDocx.asBlob(htmlContent);
+            const url = URL.createObjectURL(converted);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'students.docx';
+            a.click();
+        }
+
+        async function updateExcelSheet(student) {
+            const webhookUrl = 'Power Automate Webhook URL'; // Replace with your Power Automate Webhook URL
+
+            try {
+                const response = await fetch(webhookUrl, {
+                    method: 'POST',
+                    body: JSON.stringify(student),
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                });
+
+                const result = await response.json();
+                if (result.status === 'success') {
+                    console.log('Data successfully sent to Excel');
+                } else {
+                    console.error('Failed to send data to Excel:', result.message);
+                }
+            } catch (error) {
+                console.error('Error updating Excel:', error);
+            }
+        }
+
+        function addStudent(student) {
+            let students = JSON.parse(localStorage.getItem('students')) || [];
+            students.push(student);
+            localStorage.setItem('students', JSON.stringify(students));
+            loadStudents();
+
+            // Update Excel Sheet via Power Automate
+            updateExcelSheet({
+                id: `mmu00${students.length}`,
+                name: student.name,
+                age: student.age,
+                address: student.studentAddress,
+                class: student.studentClass,
+                contact: student.studentContact,
+                whatsapp: student.studentWhatsapp,
+            });
+        }
+
+        window.onload = loadStudents;
+    </script>
+
+<footer>
+    <div>
+    	<p>&copy; 2024 K/Polegoda M. V. - National School<br>All rights reserved.</p><br>
+        <u><a href="privacy.html">Privacy Policy</a></u>
+        <br><br><br>
+        <p>Contact us:</p>
+        <div class="footer-icons">
+            <a href="https://www.facebook.com/yourpage" target="_blank">Facebook</a> |
+            <a href="tel:+94720437397">Call Us</a> | 
+            <a href="mailto:pmvmediaunit@gmail.com.com">E - Mail</a> | 
+            <a href="https://wa.me/94720437397" target="_blank">WhatsApp</a>
+        </div>
+    </div>
+</footer>
+</body>
+</html>
+
+

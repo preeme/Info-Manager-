@@ -1,0 +1,18 @@
+form p {
+	color:#b73044;
+	opacity:75%;
+	font-size:10px;
+}
+
+hr {
+	border: 2px solid #ffe500;
+}
+
+.export {
+	list-style-type:none;
+}
+
+.export li {
+	display:inline-block;
+}
+

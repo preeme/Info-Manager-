@@ -1,0 +1,35 @@
+footer {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    background-color: #333;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    font-size:small;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    margin: 0 10px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+.footer-icons {
+    margin-top: 10px;
+    font-size:smaller;
+}
+
+.footer-icons a {
+    margin: 0 10px;
+    text-decoration: none;
+    color: white;
+}
+
+.footer-icons a:hover {
+    text-decoration: underline;
+}
